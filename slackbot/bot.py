@@ -45,7 +45,8 @@ class Bot(object):
 class PluginsManager(object):
     commands = {
         'respond_to': {},
-        'listen_to': {}
+        'listen_to': {},
+        'default_response': None
     }
 
     def __init__(self):
@@ -85,6 +86,9 @@ class PluginsManager(object):
         if not has_matching_plugin:
             yield None, None
 
+    def get_default_response_plugin(self):
+        return self.commands['default_response']
+
 
 def respond_to(matchstr, flags=0):
     def wrapper(func):
@@ -99,4 +103,12 @@ def listen_to(matchstr, flags=0):
         PluginsManager.commands['listen_to'][re.compile(matchstr, flags)] = func
         logger.info('registered listen_to plugin "%s" to "%s"', func.__name__, matchstr)
         return func
+    return wrapper
+
+
+def default_response(func):
+    PluginsManager.commands['default_response'] = func
+    logger.info('registered default_response plugin "%s"', func.__name__)
+    def wrapper(message, text):
+        func(message, text)
     return wrapper

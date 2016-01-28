@@ -37,8 +37,12 @@ class MessageDispatcher(object):
                     reply += '```\n%s\n```' % traceback.format_exc()
                     self._client.rtm_send_message(msg['channel'], reply)
 
-        if not responded and category == 'respond_to':
-            self._default_reply(msg)
+        if not responded:
+            func = self._plugins.get_default_response_plugin()
+            if func:
+                func(Message(self._client, msg), text)
+            elif category == 'respond_to':
+                self._default_reply(msg)
 
     def _on_new_message(self, msg):
         # ignore edits
