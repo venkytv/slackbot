@@ -41,7 +41,7 @@ class MessageDispatcher(object):
         if not responded:
             func = self._plugins.get_default_response_plugin()
             if func:
-                func(Message(self._client, msg), text)
+                func(Message(self._client, msg), category, text)
             elif category == 'respond_to':
                 self._default_reply(msg)
 
