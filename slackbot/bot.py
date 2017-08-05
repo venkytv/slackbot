@@ -43,10 +43,10 @@ class Bot(object):
             self._client.ping()
 
 
-def respond_to(matchstr, flags=0):
+def respond_to(matchstr, flags=0, avatar=None):
     def wrapper(func):
         PluginsManager.commands['respond_to'][
-            re.compile(matchstr, flags)] = func
+            (re.compile(matchstr, flags), avatar)] = func
         logger.info('registered respond_to plugin "%s" to "%s"', func.__name__,
                     matchstr)
         return func
@@ -54,10 +54,10 @@ def respond_to(matchstr, flags=0):
     return wrapper
 
 
-def listen_to(matchstr, flags=0):
+def listen_to(matchstr, flags=0, avatar=None):
     def wrapper(func):
         PluginsManager.commands['listen_to'][
-            re.compile(matchstr, flags)] = func
+            (re.compile(matchstr, flags), avatar)] = func
         logger.info('registered listen_to plugin "%s" to "%s"', func.__name__,
                     matchstr)
         return func
@@ -82,7 +82,7 @@ def default_reply(*args, **kwargs):
 
     def wrapper(func):
         PluginsManager.commands['default_reply'][
-            re.compile(matchstr, flags)] = func
+            (re.compile(matchstr, flags), None)] = func
         logger.info('registered default_reply plugin "%s" to "%s"', func.__name__,
                     matchstr)
         return func

@@ -181,7 +181,7 @@ class Channel(object):
         self._client = slackclient
 
     def __eq__(self, compare_str):
-        name = self._body['name']
+        name = self._body['name'] if 'name' in self._body else ''
         cid = self._body['id']
         return name == compare_str or "#" + name == compare_str or cid == compare_str
 
